@@ -24,14 +24,16 @@ wss.on("connection", ws => {
 
     ws.on("message", data => {
         console.log(`Server received a message: ${data}`);
-
-        ws.send("Hello client, it's me a server");
     });
 
-    // Listen for any/all AMI events.
+    // Listen for any / all AMI events.
     ami.on("managerevent", (event) => {
         // console.log(event);
         ws.send(JSON.stringify(event));
     });
 
+    // ami.on("bridgeenter", (event) => {
+    //     // console.log(event);
+    //     ws.send(JSON.stringify(event));
+    // });
 });
