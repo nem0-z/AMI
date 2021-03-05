@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "asterisk-manager": "^0.1.16",
+    "mysql": "^2.18.1",
     "websocket": "^1.0.33",
     "ws": "^7.4.3"
   }
