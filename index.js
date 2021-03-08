@@ -3,15 +3,17 @@ const activeCalls = document.getElementById("activeCalls");
 const usersOnline = document.getElementById("usersOnline");
 const devicesRegistered = document.getElementById("devicesRegistered");
 const timeNode = document.getElementById("updateTime");
-const container = document.getElementById("events");
+const eventsContainer = document.getElementById("events");
 
 
+//Called once on each event received from server, updates time
 function updateTime() {
     const today = new Date();
     const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     timeNode.innerHTML = time;
 }
 
+//Bezveze se igro 
 function addCopyListener(event, data) {
     event.addEventListener("click", () => {
         const dummy = document.createElement("textarea");
@@ -24,19 +26,22 @@ function addCopyListener(event, data) {
     });
 }
 
-function addToRecentEvents(data) {
+//Stack most recent events on top of each other
+function addToRecentEvents(event) {
     const recentEvent = document.createElement("button");
-    recentEvent.className = "collapsible";
-    recentEvent.innerHTML = `Event: ${data.event}`;
-    addCopyListener(recentEvent, data);
-    container.insertBefore(recentEvent, container.firstChild);
+    recentEvent.className = "event";
+    recentEvent.innerHTML = `Event: ${event.event}`;
+    addCopyListener(recentEvent, event);
+    eventsContainer.insertBefore(recentEvent, eventsContainer.firstChild);
 }
 
+//Increment the stat in an element
 function incrementCounter(node) {
     if (node)
         node.innerHTML = parseInt(node.innerHTML) + 1;
 }
 
+//Decrement the stat in an element and perform a sanity check
 function decrementCounter(node) {
     if (node) {
         const current = parseInt(node.innerHTML);
@@ -50,11 +55,12 @@ ws.addEventListener("open", () => {
         const data = JSON.parse(message.data);
 
         if (data.messageType === "event") {
+            //This function implements the logic of parsing AMI events
             AMIevent(data);
         }
         if (data.messageType === "info") {
-            const count = data.endpointCount;
-            devicesRegistered.innerHTML = count;
+            //Just update the number of registered endpoints
+            devicesRegistered.innerHTML = data.endpointCount;
         }
     });
 });

@@ -1,3 +1,4 @@
+const { exec } = require("child_process");
 const WebSocket = require("ws");
 // const mysql = require("mysql");
 const AMI = require("asterisk-manager");
@@ -43,27 +44,21 @@ wss.on("connection", ws => {
         // });
     });
 
-    //Update number of extensions
-    ami.action({
-        "action": "command",
-        "command": "pjsip list endpoints"
-    }, (err, res) => {
+    //Update total number of registered extensions
+    exec("asterisk -rx 'pjsip list endpoints' | grep Endpoint: | wc -l", (err, stdout, stderr) => {
         if (err)
             throw err;
 
-        //Don't look at following lines please
-        const endpoints = res.output[res.output.length - 2];
-        const endpointsCount = endpoints.split(' ');
         const data = {
             messageType: "info",
-            endpointCount: endpointsCount[endpointsCount.length - 1]
+            endpointCount: parseInt(stdout) - 1
         };
         ws.send(JSON.stringify(data));
     });
 
     // Listen for any / all AMI events.
     ami.on("managerevent", (event) => {
-        //Ignore VarSet events
+        //Ignore VarSet events because why the fuck not
         if (event.event != "VarSet") {
             //Send whole event
             event.messageType = "event";
@@ -72,10 +67,3 @@ wss.on("connection", ws => {
     });
 
 });
-
-// ami.on("managerevent", (event) => {
-//     if (event.event != "VarSet") {
-//         console.log(event);
-//         console.log(' ');
-//     }
-// });
