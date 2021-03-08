@@ -36,12 +36,24 @@ wss.on("connection", ws => {
         // console.debug("Connection closed!");
     });
 
-    ws.on("message", query => {
-        // console.debug(`Server received a db query: ${query}`);
-        // connection.query(query, (err, _) => {
-        //     if (err)
-        //         throw err;
-        // });
+    ws.on("message", message => {
+        const data = JSON.parse(message);
+
+        if (data.action === "dial") {
+            const channel = data.channel;
+            const extension = data.extension;
+
+            ami.action({
+                "action": "originate",
+                "channel": channel,
+                "exten": extension,
+                "context": "sets",
+                "priority": 1,
+            }, (err, res) => {
+                if (err)
+                    throw err;
+            });
+        }
     });
 
     //Update total number of registered extensions

@@ -6,6 +6,11 @@ const timeNode = document.getElementById("updateTime");
 const eventsContainer = document.getElementById("events");
 
 
+const dialer = document.getElementById("dialer");
+dialer.addEventListener("click", () => {
+    window.location.href = "dialer.html";
+});
+
 //Called once on each event received from server, updates time
 function updateTime() {
     const today = new Date();
