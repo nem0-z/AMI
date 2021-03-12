@@ -4,9 +4,8 @@ const usersOnline = document.getElementById("usersOnline");
 const devicesRegistered = document.getElementById("devicesRegistered");
 const timeNode = document.getElementById("updateTime");
 const eventsContainer = document.getElementById("events");
-
-
 const dialer = document.getElementById("dialer");
+
 dialer.addEventListener("click", () => {
     window.location.href = "dialer.html";
 });
@@ -24,8 +23,10 @@ function addCopyListener(event, data) {
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = JSON.stringify(data);
+
         dummy.select();
         document.execCommand("copy");
+
         document.body.removeChild(dummy);
         alert("Copied to clipboard");
     });
