@@ -6,11 +6,16 @@ const wss = new WebSocket.Server({
     port: 4000
 });
 
+const port = process.argv[2];
+const host = process.argv[3];
+const user = process.argv[4];
+const pw = process.argv[5];
+
 const ami = new AMI(
-    5038,
-    "localhost",
-    "admin",
-    "admin",
+    port,
+    host,
+    user,
+    pw,
     true
 );
 ami.keepConnected();
